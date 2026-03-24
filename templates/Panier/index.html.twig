@@ -1,0 +1,34 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : panier{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : panier{% endblock %}
+
+{% block vue %}
+    <section>
+        <h2>Panier courant</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix ligne</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">Le panier est vide pour le moment.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Total :</strong> 0 €</p>
+
+        <p>
+            <a href="#">Commander</a> |
+            <a href="#">Vider le panier</a>
+        </p>
+    </section>
+{% endblock %}

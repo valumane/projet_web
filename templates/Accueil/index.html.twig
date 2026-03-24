@@ -1,0 +1,21 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : accueil{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : bienvenue{% endblock %}
+
+{% block vue %}
+    <section>
+        <h2>Bienvenue sur le site</h2>
+
+        <p>
+            Cette application permet de consulter les produits,
+            gérer un panier et administrer certaines données.
+        </p>
+
+        <div class="carte">
+            <p><strong>Utilisateur simulé :</strong> visiteur à définir</p>
+            <p><strong>Pays courant :</strong> inconnu</p>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'Layouts/layout.html.twig' %}
+
+{% block title %}Vente{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" media="screen" type="text/css" title="default" href="{{ asset('css/default.css') }}" />
+{% endblock %}
+
+{% block body %}
+    <div id="flash">
+        {% include 'Layouts/_flash.html.twig' %}
+    </div>
+
+    <div id="menu">
+        {{ render(controller('App\\Controller\\AccueilController::menuAction')) }}
+    </div>
+
+    <div id="header">
+        {% include 'Layouts/_header.html.twig' %}
+    </div>
+
+    <div id="titre">
+        <h1>{% block titre_principal %}Site de vente{% endblock %}</h1>
+    </div>
+
+    <div id="vue">
+        {% block vue %}{% endblock %}
+    </div>
+
+    <div id="footer">
+        {% include 'Layouts/_footer.html.twig' %}
+    </div>
+{% endblock %}
