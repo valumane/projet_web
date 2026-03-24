@@ -16,6 +16,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProduitController extends AbstractController
 {
+    /**
+     * affiche la liste des produits
+     * recupere aussi l'user courant
+     * et ses lignes de panier pour savoir
+     * quelle quantité il a deja par produit
+     */
     #[Route('/produits', name: 'produit_list', methods: ['GET'])]
     public function listAction(
         ProduitRepository $produitRepository,
@@ -25,9 +31,11 @@ final class ProduitController extends AbstractController
         $currentUser = $currentUserProvider->getCurrentUser();
         $contenusPanier = [];
 
+        // si un user est connecté on recupere ses lignes de panier
         if ($currentUser !== null) {
             $lignesPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
 
+            // tableau indexé par id produit pour acces rapide dans la vue
             foreach ($lignesPanier as $ligne) {
                 $contenusPanier[$ligne->getProduit()->getId()] = $ligne;
             }
@@ -40,6 +48,11 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+    /**
+     * met a jour le panier pour un produit
+     * ajoute ou retire une quantité selon la valeur envoyée
+     * met aussi a jour le stock du produit
+     */
     #[Route('/produits/panier/{id}', name: 'produit_panier_update', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function updatePanierAction(
         Produit $produit,
@@ -50,13 +63,16 @@ final class ProduitController extends AbstractController
     ): Response {
         $currentUser = $currentUserProvider->getCurrentUser();
 
+        // refuse si aucun user courant
         if ($currentUser === null) {
             $this->addFlash('info', 'Aucun utilisateur courant.');
             return $this->redirectToRoute('produit_list');
         }
 
+        // quantité demandée dans le formulaire
         $delta = (int) $request->request->get('quantite', 0);
 
+        // cherche si une ligne existe deja pour ce produit dans le panier
         $contenuPanier = $contenuPanierRepository->findOneBy([
             'user' => $currentUser,
             'produit' => $produit,
@@ -65,22 +81,27 @@ final class ProduitController extends AbstractController
         $quantiteDansPanier = $contenuPanier?->getQuantite() ?? 0;
         $stockDisponible = $produit->getQuantiteStock();
 
+        // refuse si aucune modif demandée
         if ($delta === 0) {
             $this->addFlash('info', 'Aucune modification effectuée.');
             return $this->redirectToRoute('produit_list');
         }
 
+        // refuse si on veut ajouter plus que le stock
         if ($delta > $stockDisponible) {
             $this->addFlash('info', 'Quantité demandée supérieure au stock disponible.');
             return $this->redirectToRoute('produit_list');
         }
 
+        // refuse si on veut retirer plus que ce qu'il y a deja dans le panier
         if ($delta < 0 && abs($delta) > $quantiteDansPanier) {
             $this->addFlash('info', 'Impossible de retirer plus que la quantité présente dans le panier.');
             return $this->redirectToRoute('produit_list');
         }
 
+        // cas ajout au panier
         if ($delta > 0) {
+            // cree une ligne si elle n'existe pas encore
             if ($contenuPanier === null) {
                 $contenuPanier = new ContenuPanier();
                 $contenuPanier->setUser($currentUser);
@@ -89,14 +110,19 @@ final class ProduitController extends AbstractController
                 $entityManager->persist($contenuPanier);
             }
 
+            // augmente la quantité dans le panier
+            // et diminue le stock
             $contenuPanier->setQuantite($quantiteDansPanier + $delta);
             $produit->setQuantiteStock($stockDisponible - $delta);
         } else {
+            // cas retrait du panier
             $retrait = abs($delta);
             $nouvelleQuantite = $quantiteDansPanier - $retrait;
 
+            // remet la quantité retirée dans le stock
             $produit->setQuantiteStock($stockDisponible + $retrait);
 
+            // si la quantité tombe a 0 on supprime la ligne
             if ($nouvelleQuantite <= 0) {
                 if ($contenuPanier !== null) {
                     $entityManager->remove($contenuPanier);
@@ -113,6 +139,11 @@ final class ProduitController extends AbstractController
         return $this->redirectToRoute('produit_list');
     }
 
+    /**
+     * affiche le formulaire d'ajout de produit
+     * reserve l'acces aux admins simples
+     * enregistre le produit si le formulaire est valide
+     */
     #[Route('/produit/ajout', name: 'produit_add')]
     public function addAction(
         Request $request,
@@ -121,6 +152,7 @@ final class ProduitController extends AbstractController
     ): Response {
         $currentUser = $currentUserProvider->getCurrentUser();
 
+        // refuse si pas admin simple
         if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {
             $this->addFlash('info', 'Accès refusé.');
             return $this->redirectToRoute('accueil_index');
@@ -130,6 +162,7 @@ final class ProduitController extends AbstractController
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
+        // si le form est valide on ajoute le produit en bdd
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($produit);
             $entityManager->flush();
