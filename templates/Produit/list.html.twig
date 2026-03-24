@@ -1,0 +1,27 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : produits{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : liste des produits{% endblock %}
+
+{% block vue %}
+    <section>
+        <h2>Produits disponibles</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Libellé</th>
+                <th>Prix unitaire</th>
+                <th>Stock</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">Aucun produit affiché pour le moment.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
