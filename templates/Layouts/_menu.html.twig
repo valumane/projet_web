@@ -1,12 +1,23 @@
 {# Menu du site #}
+
 <nav>
+    {% if nbArticlesPanier is not null %}
+        <p><strong>Articles dans le panier :</strong> {{ nbArticlesPanier }}</p>
+    {% endif %}
+
     <ul>
         <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
         <li><a href="{{ path('profil_index') }}">Profil</a></li>
         <li><a href="{{ path('produit_list') }}">Produits</a></li>
         <li><a href="{{ path('panier_index') }}">Panier</a></li>
-        <li><a href="{{ path('utilisateur_list') }}">Utilisateurs</a></li>
-        <li><a href="{{ path('produit_add') }}">Ajouter un produit</a></li>
-        <li><a href="{{ path('admin_add') }}">Ajouter un administrateur</a></li>
+
+        {% if currentUser and currentUser.isAdmin and not currentUser.isSuperAdmin %}
+            <li><a href="{{ path('utilisateur_list') }}">Utilisateurs</a></li>
+            <li><a href="{{ path('produit_add') }}">Ajouter un produit</a></li>
+        {% endif %}
+
+        {% if currentUser and currentUser.isSuperAdmin %}
+            <li><a href="{{ path('admin_add') }}">Ajouter un administrateur</a></li>
+        {% endif %}
     </ul>
 </nav>

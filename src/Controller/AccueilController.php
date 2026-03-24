@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ContenuPanierRepository;
 use App\Service\CurrentUserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,29 @@ final class AccueilController extends AbstractController
         ]);
     }
 
-    public function menuAction(CurrentUserProvider $currentUserProvider): Response
-    {
+    public function menuAction(
+        CurrentUserProvider $currentUserProvider,
+        ContenuPanierRepository $contenuPanierRepository
+    ): Response {
+        $currentUser = $currentUserProvider->getCurrentUser();
+        $nbArticlesPanier = null;
+
+        if (
+            $currentUser !== null
+            && !$currentUser->isAdmin()
+            && !$currentUser->isSuperAdmin()
+        ) {
+            $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
+
+            $nbArticlesPanier = 0;
+            foreach ($contenusPanier as $contenuPanier) {
+                $nbArticlesPanier += $contenuPanier->getQuantite();
+            }
+        }
+
         return $this->render('Layouts/_menu.html.twig', [
-            'currentUser' => $currentUserProvider->getCurrentUser(),
+            'currentUser' => $currentUser,
+            'nbArticlesPanier' => $nbArticlesPanier,
         ]);
     }
 
