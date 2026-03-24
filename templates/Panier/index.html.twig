@@ -12,23 +12,36 @@
             <thead>
             <tr>
                 <th>Produit</th>
+                <th>Prix unitaire</th>
                 <th>Quantité</th>
                 <th>Prix ligne</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td colspan="4">Le panier est vide pour le moment.</td>
-            </tr>
+            {% for contenuPanier in contenusPanier %}
+                <tr>
+                    <td>{{ contenuPanier.produit.libelle }}</td>
+                    <td>{{ contenuPanier.produit.prixUnitaire }} €</td>
+                    <td>{{ contenuPanier.quantite }}</td>
+                    <td>{{ (contenuPanier.quantite * contenuPanier.produit.prixUnitaire)|number_format(2, '.', ' ') }} €</td>
+                    <td>
+                        <a href="{{ path('panier_delete', {id: contenuPanier.id}) }}">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Le panier est vide pour le moment.</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
-        <p><strong>Total :</strong> 0 €</p>
+        <p><strong>Total :</strong> {{ total|number_format(2, '.', ' ') }} €</p>
 
         <p>
-            <a href="#">Commander</a> |
-            <a href="#">Vider le panier</a>
+            <a href="{{ path('panier_order') }}">Commander</a> |
+            <a href="{{ path('panier_clear') }}">Vider le panier</a>
         </p>
     </section>
 {% endblock %}
