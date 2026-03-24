@@ -41,7 +41,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $gilles = new User();
         $gilles->setLogin('gilles');
         $gilles->setPassword($this->passwordHasher->hashPassword($gilles, 'sellig'));
-        $gilles->setNom('Martin');
+        $gilles->setNom('Subrenat');
         $gilles->setPrenom('Gilles');
         $gilles->setDateNaissance(new \DateTime('1992-05-10'));
         $gilles->setIsAdmin(true);
@@ -54,7 +54,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $rita = new User();
         $rita->setLogin('rita');
         $rita->setPassword($this->passwordHasher->hashPassword($rita, 'atir'));
-        $rita->setNom('Durand');
+        $rita->setNom('Zrour');
         $rita->setPrenom('Rita');
         $rita->setDateNaissance(new \DateTime('1998-08-20'));
         $rita->setIsAdmin(false);
@@ -67,7 +67,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $mathieu = new User();
         $mathieu->setLogin('mathieu');
         $mathieu->setPassword($this->passwordHasher->hashPassword($mathieu, 'ueihtam'));
-        $mathieu->setNom('Bernard');
+        $mathieu->setNom('Chartier');
         $mathieu->setPrenom('Mathieu');
         $mathieu->setDateNaissance(new \DateTime('1996-03-15'));
         $mathieu->setIsAdmin(false);
