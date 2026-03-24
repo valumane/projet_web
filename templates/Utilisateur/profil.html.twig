@@ -1,0 +1,22 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : profil{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : profil{% endblock %}
+
+{% block vue %}
+    <section>
+        <h2>Mon profil</h2>
+
+        {{ form_start(profilForm) }}
+            {{ form_row(profilForm.login) }}
+            {{ form_row(profilForm.nom) }}
+            {{ form_row(profilForm.prenom) }}
+            {{ form_row(profilForm.dateNaissance) }}
+            {{ form_row(profilForm.pays) }}
+            {{ form_row(profilForm.plainPassword) }}
+
+            <button type="submit">Enregistrer</button>
+        {{ form_end(profilForm) }}
+    </section>
+{% endblock %}
