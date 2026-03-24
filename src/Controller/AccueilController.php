@@ -10,6 +10,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AccueilController extends AbstractController
 {
+
+
+
+/** 
+ * affiche la page d'accuieil du site
+ * recupere l'user courant via CurrentUserProvider 
+ * et l'envoie a la vue pour afficher ses infos
+*/
     #[Route('/', name: 'accueil_index')]
     public function indexAction(CurrentUserProvider $currentUserProvider): Response
     {
@@ -18,6 +26,12 @@ final class AccueilController extends AbstractController
         ]);
     }
 
+
+/**
+ * action qui construit le menu du site
+ * si l'utilisateur courant est un client cacule aussi
+ *  le nombre total d'articles dans son panier
+ */
     public function menuAction(
         CurrentUserProvider $currentUserProvider,
         ContenuPanierRepository $contenuPanierRepository
@@ -25,6 +39,7 @@ final class AccueilController extends AbstractController
         $currentUser = $currentUserProvider->getCurrentUser();
         $nbArticlesPanier = null;
 
+        //compteur affiché que pour un client connecté non admin et non sadmin
         if (
             $currentUser !== null
             && !$currentUser->isAdmin()
@@ -32,6 +47,7 @@ final class AccueilController extends AbstractController
         ) {
             $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
 
+            //somme des quantité 
             $nbArticlesPanier = 0;
             foreach ($contenusPanier as $contenuPanier) {
                 $nbArticlesPanier += $contenuPanier->getQuantite();
@@ -44,6 +60,12 @@ final class AccueilController extends AbstractController
         ]);
     }
 
+
+/** 
+ * affiche l'entete du site
+ * envoie l'user courant au header pour afficher 
+ * nom prenom role
+*/
     public function headerAction(CurrentUserProvider $currentUserProvider): Response
     {
         return $this->render('Layouts/_header.html.twig', [
