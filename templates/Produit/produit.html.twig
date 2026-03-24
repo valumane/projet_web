@@ -1,0 +1,42 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : produits{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : liste des produits{% endblock %}
+
+{% block vue %}
+    <section>
+        <h2>Produits disponibles</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Libellé</th>
+                <th>Prix unitaire</th>
+                <th>Stock</th>
+                <th>Pays</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.prixUnitaire }} €</td>
+                    <td>{{ produit.quantiteStock }}</td>
+                    <td>
+                        {% for pays in produit.pays %}
+                            {{ pays.nom }}{% if not loop.last %}, {% endif %}
+                        {% else %}
+                            aucun
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun produit disponible.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}  

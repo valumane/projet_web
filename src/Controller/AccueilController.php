@@ -23,4 +23,11 @@ final class AccueilController extends AbstractController
             'currentUser' => $currentUserProvider->getCurrentUser(),
         ]);
     }
+
+    public function headerAction(CurrentUserProvider $currentUserProvider): Response
+    {
+        return $this->render('Layouts/_header.html.twig', [
+            'currentUser' => $currentUserProvider->getCurrentUser(),
+        ]);
+    }
 }

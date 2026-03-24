@@ -9,7 +9,7 @@
 
 {% block body %}
     <div id="header">
-        {% include 'Layouts/_header.html.twig' %}
+        {{ render(controller('App\\Controller\\AccueilController::headerAction')) }}    
     </div>
 
     <div id="menu">
