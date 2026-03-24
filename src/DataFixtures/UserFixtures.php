@@ -26,8 +26,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $sadmin = new User();
         $sadmin->setLogin('sadmin');
         $sadmin->setPassword($this->passwordHasher->hashPassword($sadmin, 'nimdas'));
-        $sadmin->setNom('Admin');
-        $sadmin->setPrenom('Super');
+        $sadmin->setNom('s');
+        $sadmin->setPrenom('admin');
         $sadmin->setDateNaissance(new \DateTime('1990-01-01'));
         $sadmin->setIsAdmin(true);
         $sadmin->setIsSuperAdmin(true);

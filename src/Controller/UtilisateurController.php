@@ -2,21 +2,35 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\ProfilType;
+use App\Repository\ContenuPanierRepository;
+use App\Repository\UserRepository;
 use App\Service\CurrentUserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class UtilisateurController extends AbstractController
 {
     #[Route('/utilisateurs', name: 'utilisateur_list')]
-    public function listAction(): Response
-    {
-        return $this->render('Utilisateur/list.html.twig');
+    public function listAction(
+        UserRepository $userRepository,
+        CurrentUserProvider $currentUserProvider
+    ): Response {
+        $currentUser = $currentUserProvider->getCurrentUser();
+
+        if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
+
+        return $this->render('Utilisateur/list.html.twig', [
+            'users' => $userRepository->findAll(),
+            'currentUser' => $currentUser,
+        ]);
     }
 
     #[Route('/profil', name: 'profil_index')]
@@ -55,6 +69,43 @@ final class UtilisateurController extends AbstractController
             'profilForm' => $form->createView(),
             'currentUser' => $user,
         ]);
+    }
+
+    #[Route('/utilisateurs/supprimer/{id}', name: 'utilisateur_delete', requirements: ['id' => '\d+'])]
+    public function deleteAction(
+        User $userToDelete,
+        CurrentUserProvider $currentUserProvider,
+        ContenuPanierRepository $contenuPanierRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $currentUser = $currentUserProvider->getCurrentUser();
+
+        if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
+
+        if ($userToDelete->isSuperAdmin()) {
+            $this->addFlash('info', 'Impossible de supprimer un super-admin.');
+            return $this->redirectToRoute('utilisateur_list');
+        }
+
+        if ($currentUser->getId() === $userToDelete->getId()) {
+            $this->addFlash('info', 'Impossible de supprimer l’utilisateur courant.');
+            return $this->redirectToRoute('utilisateur_list');
+        }
+
+        $contenusPanier = $contenuPanierRepository->findBy(['user' => $userToDelete]);
+
+        foreach ($contenusPanier as $contenuPanier) {
+            $entityManager->remove($contenuPanier);
+        }
+
+        $entityManager->remove($userToDelete);
+        $entityManager->flush();
+
+        $this->addFlash('info', 'Utilisateur supprimé avec succès.');
+
+        return $this->redirectToRoute('utilisateur_list');
     }
 
     #[Route('/admin/ajout', name: 'admin_add')]

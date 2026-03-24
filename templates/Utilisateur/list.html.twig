@@ -22,9 +22,42 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td colspan="8">Aucun utilisateur affiché pour le moment.</td>
-            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.dateNaissance ? user.dateNaissance|date('Y-m-d') : '' }}</td>
+                    <td>
+                        {% if user.isSuperAdmin %}
+                            super-admin
+                        {% elseif user.isAdmin %}
+                            admin
+                        {% else %}
+                            client
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.pays %}
+                            {{ user.pays.nom }}
+                        {% else %}
+                            aucun
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.isSuperAdmin or user.id == currentUser.id %}
+                            suppression interdite
+                        {% else %}
+                            <a href="{{ path('utilisateur_delete', {id: user.id}) }}">Supprimer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun utilisateur affiché.</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </section>
