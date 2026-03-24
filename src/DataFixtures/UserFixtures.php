@@ -3,28 +3,26 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Entity\Pays;
-
+use App\Repository\PaysRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const USER_SADMIN = 'user-sadmin';
-    public const USER_GILLES = 'user-gilles';
-    public const USER_RITA = 'user-rita';
-    public const USER_MATHIEU = 'user-mathieu';
-
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private PaysRepository $paysRepository
     ) {
     }
 
     public function load(ObjectManager $manager): void
     {
+        $france = $this->paysRepository->findOneBy(['code' => 'FR']);
+        $belgique = $this->paysRepository->findOneBy(['code' => 'BE']);
+        $espagne = $this->paysRepository->findOneBy(['code' => 'ES']);
+
         $sadmin = new User();
         $sadmin->setLogin('sadmin');
         $sadmin->setPassword($this->passwordHasher->hashPassword($sadmin, 'nimdas'));
@@ -33,10 +31,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $sadmin->setDateNaissance(new \DateTime('1990-01-01'));
         $sadmin->setIsAdmin(true);
         $sadmin->setIsSuperAdmin(true);
-        $sadmin->setPays($this->getReference(PaysFixtures::FRANCE, Pays::class));
+        $sadmin->setPays($france);
         $sadmin->setRoles(['ROLE_SUPER_ADMIN']);
         $manager->persist($sadmin);
-        $this->addReference(self::USER_SADMIN, $sadmin);
 
         $gilles = new User();
         $gilles->setLogin('gilles');
@@ -46,10 +43,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $gilles->setDateNaissance(new \DateTime('1992-05-10'));
         $gilles->setIsAdmin(true);
         $gilles->setIsSuperAdmin(false);
-        $gilles->setPays($this->getReference(PaysFixtures::BELGIQUE, Pays::class));
+        $gilles->setPays($belgique);
         $gilles->setRoles(['ROLE_ADMIN']);
         $manager->persist($gilles);
-        $this->addReference(self::USER_GILLES, $gilles);
 
         $rita = new User();
         $rita->setLogin('rita');
@@ -59,10 +55,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $rita->setDateNaissance(new \DateTime('1998-08-20'));
         $rita->setIsAdmin(false);
         $rita->setIsSuperAdmin(false);
-        $rita->setPays($this->getReference(PaysFixtures::ESPAGNE, Pays::class));
+        $rita->setPays($espagne);
         $rita->setRoles([]);
         $manager->persist($rita);
-        $this->addReference(self::USER_RITA, $rita);
 
         $mathieu = new User();
         $mathieu->setLogin('mathieu');
@@ -75,7 +70,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $mathieu->setPays(null);
         $mathieu->setRoles([]);
         $manager->persist($mathieu);
-        $this->addReference(self::USER_MATHIEU, $mathieu);
 
         $manager->flush();
     }
