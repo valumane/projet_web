@@ -11,7 +11,7 @@ final class AccueilController extends AbstractController
     #[Route('/', name: 'accueil_index')]
     public function indexAction(): Response
     {
-        return $this->render('site/accueil.html.twig');
+        return $this->render('Site/accueil.html.twig');
     }
 
     public function menuAction(): Response
