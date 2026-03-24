@@ -1,5 +1,8 @@
 {# entête du site #}
 
-<div class="bandeau">
-    <p>Projet Symfony - Site de vente</p>
+<div class="bandeau-superieur">
+    <p class="bandeau-gauche">Bienvenue sur le site de vente</p>
+    <p class="bandeau-droite">
+        Connecté : {{ nom_utilisateur|default('visiteur') }}
+    </p>
 </div>

@@ -8,16 +8,12 @@
 {% endblock %}
 
 {% block body %}
-    <div id="flash">
-        {% include 'Layouts/_flash.html.twig' %}
+    <div id="header">
+        {% include 'Layouts/_header.html.twig' %}
     </div>
 
     <div id="menu">
         {{ render(controller('App\\Controller\\AccueilController::menuAction')) }}
-    </div>
-
-    <div id="header">
-        {% include 'Layouts/_header.html.twig' %}
     </div>
 
     <div id="titre">
@@ -26,6 +22,10 @@
 
     <div id="vue">
         {% block vue %}{% endblock %}
+    </div>
+
+    <div id="flash">
+        {% include 'Layouts/_flash.html.twig' %}
     </div>
 
     <div id="footer">
