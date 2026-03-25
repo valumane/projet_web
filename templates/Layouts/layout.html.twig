@@ -1,11 +1,15 @@
-{# Template racine #}
+{# Template racine - niveau 1 #}
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    {% block css %}{% endblock %}
+
+    {% block css %}
+        <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+    {% endblock %}
+
     {% block javascript %}{% endblock %}
 </head>
 <body>

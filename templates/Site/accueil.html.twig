@@ -2,6 +2,11 @@
 
 {% block title %}Accueil{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
 {% block titre_principal %}Accueil{% endblock %}
 
 {% block vue %}
@@ -9,7 +14,7 @@
         <h2>Bienvenue sur le site</h2>
 
         {% if currentUser %}
-            <div class="carte">
+            <div class="carte accueil-carte">
                 <p><strong>Utilisateur courant :</strong> {{ currentUser.login }}</p>
                 <p><strong>Nom :</strong> {{ currentUser.nom }}</p>
                 <p><strong>Prenom :</strong> {{ currentUser.prenom}}</p>
