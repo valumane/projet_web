@@ -178,7 +178,7 @@ final class UtilisateurController extends AbstractController
 
             $this->addFlash('info', 'Administrateur ajouté avec succès.');
 
-            return $this->redirectToRoute('utilisateur_list');
+            return $this->redirectToRoute('admin_add');
         }
 
         return $this->render('Utilisateur/ajout_admin.html.twig', [
