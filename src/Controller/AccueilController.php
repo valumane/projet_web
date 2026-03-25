@@ -38,7 +38,6 @@ final class AccueilController extends AbstractController
         // compteur affiche que pour un client connecte non admin et non sadmin
         if (
             $currentUser !== null
-            && !$currentUser->isAdmin()
             && !$currentUser->isSuperAdmin()
         ) {
             $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
