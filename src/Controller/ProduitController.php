@@ -63,9 +63,9 @@ final class ProduitController extends AbstractController
     ): Response {
         $currentUser = $currentUserProvider->getCurrentUser();
 
-        // refuse si aucun user courant
-        if ($currentUser === null) {
-            $this->addFlash('info', 'Aucun utilisateur courant.');
+        // refuse si aucun user courant ou si user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
             return $this->redirectToRoute('produit_list');
         }
 
@@ -151,6 +151,16 @@ final class ProduitController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $currentUser = $currentUserProvider->getCurrentUser();
+
+
+        // refuse si super admin
+        if ($currentUser !== null && $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
+        }
+
+        $contenusPanier = [];
+
 
         // refuse si pas admin simple
         if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {

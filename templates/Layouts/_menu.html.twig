@@ -7,17 +7,30 @@
 
     <ul>
         <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
-        <li><a href="{{ path('profil_index') }}">Profil</a></li>
-        <li><a href="{{ path('produit_list') }}">Produits</a></li>
-        <li><a href="{{ path('panier_index') }}">Panier</a></li>
 
-        {% if currentUser and currentUser.isAdmin and not currentUser.isSuperAdmin %}
+        {% if not currentUser %}
+            <li><a href="#">Connexion</a></li>
+            <li><a href="#">Création de compte</a></li>
+
+        {% elseif currentUser.isSuperAdmin %}
+            <li><a href="{{ path('profil_index') }}">Profil</a></li>
+            <li><a href="{{ path('admin_add') }}">Ajouter un administrateur</a></li>
+            <li><a href="#">Déconnexion</a></li>
+
+        {% elseif currentUser.isAdmin %}
+            <li><a href="{{ path('profil_index') }}">Profil</a></li>
+            <li><a href="{{ path('produit_list') }}">Produits</a></li>
+            <li><a href="{{ path('panier_index') }}">Panier</a></li>
             <li><a href="{{ path('utilisateur_list') }}">Utilisateurs</a></li>
             <li><a href="{{ path('produit_add') }}">Ajouter un produit</a></li>
-        {% endif %}
+            <li><a href="https://www.ecb.europa.eu/euro/coins/comm/html/index.fr.html" target="_blank" rel="noopener">Site externe</a></li>
+            <li><a href="#">Déconnexion</a></li>
 
-        {% if currentUser and currentUser.isSuperAdmin %}
-            <li><a href="{{ path('admin_add') }}">Ajouter un administrateur</a></li>
+        {% else %}
+            <li><a href="{{ path('profil_index') }}">Profil</a></li>
+            <li><a href="{{ path('produit_list') }}">Produits</a></li>
+            <li><a href="{{ path('panier_index') }}">Panier</a></li>
+            <li><a href="#">Déconnexion</a></li>
         {% endif %}
     </ul>
 </nav>

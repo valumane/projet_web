@@ -30,6 +30,12 @@ final class PanierController extends AbstractController
             return $this->redirectToRoute('accueil_index');
         }
 
+        // securité : on refuse si l'user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
+        }
+
         // recupere toutes les lignes du panier du user
         $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
 
@@ -60,9 +66,19 @@ final class PanierController extends AbstractController
         $currentUser = $currentUserProvider->getCurrentUser();
 
         // securite : on refuse si la ligne n'appartient pas a l'user courant
-        if ($currentUser === null || $contenuPanier->getUser()?->getId() !== $currentUser->getId()) {
+        if (
+            $currentUser === null
+            || $currentUser->isSuperAdmin()
+            || $contenuPanier->getUser()?->getId() !== $currentUser->getId()
+        ) {
             $this->addFlash('info', 'Accès refusé.');
             return $this->redirectToRoute('panier_index');
+        }
+
+        // securité : on refuse si l'user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
         }
 
         // remet la quantite du panier dans le stock
@@ -94,6 +110,12 @@ final class PanierController extends AbstractController
         // si aucun user courant on redirige
         if ($currentUser === null) {
             $this->addFlash('info', 'Aucun utilisateur courant.');
+            return $this->redirectToRoute('accueil_index');
+        }
+
+        // securité : on refuse si l'user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
             return $this->redirectToRoute('accueil_index');
         }
 
@@ -132,6 +154,14 @@ final class PanierController extends AbstractController
             $this->addFlash('info', 'Aucun utilisateur courant.');
             return $this->redirectToRoute('accueil_index');
         }
+
+
+        // securité : on refuse si l'user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
+        }
+
 
         // recupere le panier du user
         $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
