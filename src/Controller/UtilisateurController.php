@@ -118,10 +118,17 @@ final class UtilisateurController extends AbstractController
             return $this->redirectToRoute('utilisateur_list');
         }
 
-        $contenusPanier = $contenuPanierRepository->findBy(['user' => $userToDelete]);
+        // vider proprement le panier du user en remettant le stock
+        $contenusPanier = $contenuPanierRepository->findBy([
+            'user' => $userToDelete,
+        ]);
 
-        // supprime d'abord les lignes de panier du user
         foreach ($contenusPanier as $contenuPanier) {
+            $produit = $contenuPanier->getProduit();
+            $produit->setQuantiteStock(
+                $produit->getQuantiteStock() + $contenuPanier->getQuantite()
+            );
+
             $entityManager->remove($contenuPanier);
         }
 
