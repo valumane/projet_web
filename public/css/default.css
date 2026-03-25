@@ -62,3 +62,14 @@ td {
 .bandeau-droite {
     margin: 0;
 }
+
+.footer-bandeau {
+    text-align: center;
+}
+
+.footer-bandeau img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
