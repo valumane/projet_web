@@ -41,6 +41,12 @@ final class ProduitController extends AbstractController
             }
         }
 
+        // bloque l'acces a /produits via l'url pour le super-admin
+        if ($currentUser !== null && $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
+        }
+
         return $this->render('Produit/list.html.twig', [
             'produits' => $produitRepository->findAll(),
             'currentUser' => $currentUser,
