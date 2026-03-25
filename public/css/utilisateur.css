@@ -1,0 +1,27 @@
+.page-utilisateur-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.page-utilisateur-list table,
+.page-utilisateur-list th,
+.page-utilisateur-list td {
+    border: 1px solid #999999;
+}
+
+.page-utilisateur-list th,
+.page-utilisateur-list td {
+    padding: 8px;
+    text-align: left;
+}
+
+.page-utilisateur-profil form,
+.page-utilisateur-admin-add form {
+    margin-top: 15px;
+}
+
+.page-utilisateur-profil button,
+.page-utilisateur-admin-add button {
+    margin-top: 8px;
+}

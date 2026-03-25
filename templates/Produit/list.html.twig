@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : produits{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/produit.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : liste des produits{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-produit-list">
         <h2>Produits disponibles</h2>
 
         <table>

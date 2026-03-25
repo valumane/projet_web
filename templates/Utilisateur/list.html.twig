@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : utilisateurs{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/utilisateur.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : gestion des utilisateurs{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-utilisateur-list">
         <h2>Liste des utilisateurs</h2>
 
         <table>

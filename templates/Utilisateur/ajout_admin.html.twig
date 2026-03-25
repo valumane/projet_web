@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : ajout administrateur{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/utilisateur.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : ajout administrateur{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-utilisateur-admin-add">
         <h2>Ajouter un administrateur</h2>
 
         {{ form_start(adminForm) }}

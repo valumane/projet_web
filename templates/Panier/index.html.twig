@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : panier{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/panier.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : panier{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-panier">
         <h2>Panier courant</h2>
 
         <table>
@@ -37,9 +42,9 @@
             </tbody>
         </table>
 
-        <p><strong>Total :</strong> {{ total|number_format(2, '.', ' ') }} €</p>
+        <p class="panier-total">Total : {{ total|number_format(2, '.', ' ') }} €</p>
 
-        <p>
+        <p class="panier-actions">
             <a href="{{ path('panier_order') }}">Commander</a> |
             <a href="{{ path('panier_clear') }}">Vider le panier</a>
         </p>

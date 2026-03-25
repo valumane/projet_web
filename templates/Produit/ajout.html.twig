@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : ajout produit{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/produit.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : ajout produit{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-produit-add">
         <h2>Ajouter un produit</h2>
 
         {{ form_start(produitForm) }}
