@@ -31,6 +31,7 @@ final class ProduitController extends AbstractController
         $currentUser = $currentUserProvider->getCurrentUser();
         $contenusPanier = [];
 
+
         // si un user est connecté on recupere ses lignes de panier
         if ($currentUser !== null) {
             $lignesPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
@@ -39,6 +40,12 @@ final class ProduitController extends AbstractController
             foreach ($lignesPanier as $ligne) {
                 $contenusPanier[$ligne->getProduit()->getId()] = $ligne;
             }
+        }
+
+        // refuse si aucun user courant ou si user est super admin
+        if ($currentUser === null || $currentUser->isSuperAdmin()) {
+            $this->addFlash('info', 'Accès refusé.');
+            return $this->redirectToRoute('accueil_index');
         }
 
         return $this->render('Produit/list.html.twig', [
