@@ -165,8 +165,6 @@ final class ProduitController extends AbstractController
             return $this->redirectToRoute('accueil_index');
         }
 
-        $contenusPanier = [];
-
 
         // refuse si pas admin simple
         if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {
