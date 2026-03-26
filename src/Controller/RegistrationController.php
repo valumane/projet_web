@@ -13,11 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class RegistrationController extends AbstractController
 {
-    #[Route('/inscription', name: 'app_register')]
+    #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager
     ): Response {
         if ($this->getUser()) {
             return $this->redirectToRoute('accueil_index');
@@ -28,12 +28,16 @@ final class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->getData();
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
 
-            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+            $user->setRoles([]);
             $user->setIsAdmin(false);
             $user->setIsSuperAdmin(false);
-            $user->setRoles([]);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -43,7 +47,7 @@ final class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/register.html.twig', [
+        return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
