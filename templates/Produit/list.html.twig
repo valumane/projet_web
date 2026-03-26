@@ -46,6 +46,7 @@
                             {% if quantitePanier > 0 or produit.quantiteStock > 0 %}
                                 <form method="post" action="{{ path('produit_panier_update', {id: produit.id}) }}">
                                     <select name="quantite">
+                                        <option value="0" selected>0</option>
                                         {% for i in range(-quantitePanier, produit.quantiteStock) %}
                                             {% if i != 0 %}
                                                 <option value="{{ i }}">
