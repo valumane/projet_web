@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\ContenuPanierRepository;
 use App\Service\CurrentUserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,38 +12,52 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AccueilController extends AbstractController
 {
     /**
+     * renvoie le vrai user connecte si Security est deja branchee
+     * sinon retombe sur le faux user courant de la V1
+     */
+    private function getConnectedUserOrFallback(CurrentUserProvider $currentUserProvider): ?User
+    {
+        $user = $this->getUser();
+
+        if ($user instanceof User) {
+            return $user;
+        }
+
+        return $currentUserProvider->getCurrentUser();
+    }
+
+    /**
      * affiche la page d'accueil du site
-     * recupere l'user courant via CurrentUserProvider
-     * et l'envoie a la vue pour afficher ses infos
+     * envoie a la vue l'user courant reel si disponible
+     * sinon l'user courant fictif de la V1
      */
     #[Route('/', name: 'accueil_index')]
     public function indexAction(CurrentUserProvider $currentUserProvider): Response
     {
+        $currentUser = $this->getConnectedUserOrFallback($currentUserProvider);
+
         return $this->render('Site/accueil.html.twig', [
-            'currentUser' => $currentUserProvider->getCurrentUser(),
+            'currentUser' => $currentUser,
         ]);
     }
 
     /**
      * construit le menu du site
-     * si l'user courant est un client calcule aussi
-     * le nombre total d'articles dans son panier
+     * si l'user courant n'est pas super-admin
+     * calcule aussi le nombre total d'articles dans son panier
      */
     public function menuAction(
         CurrentUserProvider $currentUserProvider,
         ContenuPanierRepository $contenuPanierRepository
     ): Response {
-        $currentUser = $currentUserProvider->getCurrentUser();
+        $currentUser = $this->getConnectedUserOrFallback($currentUserProvider);
         $nbArticlesPanier = null;
 
-        // compteur affiche que pour un client connecte non admin et non sadmin
-        if (
-            $currentUser !== null
-            && !$currentUser->isSuperAdmin()
-        ) {
-            $contenusPanier = $contenuPanierRepository->findBy(['user' => $currentUser]);
+        if ($currentUser !== null && !$currentUser->isSuperAdmin()) {
+            $contenusPanier = $contenuPanierRepository->findBy([
+                'user' => $currentUser,
+            ]);
 
-            // somme des quantites
             $nbArticlesPanier = 0;
             foreach ($contenusPanier as $contenuPanier) {
                 $nbArticlesPanier += $contenuPanier->getQuantite();
@@ -58,12 +73,14 @@ final class AccueilController extends AbstractController
     /**
      * affiche l'entete du site
      * envoie l'user courant au header pour afficher
-     * nom prenom role
+     * login et role
      */
     public function headerAction(CurrentUserProvider $currentUserProvider): Response
     {
+        $currentUser = $this->getConnectedUserOrFallback($currentUserProvider);
+
         return $this->render('Layouts/_header.html.twig', [
-            'currentUser' => $currentUserProvider->getCurrentUser(),
+            'currentUser' => $currentUser,
         ]);
     }
 }

@@ -28,16 +28,9 @@ class Pays
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'pays')]
     private Collection $users;
 
-    /**
-     * @var Collection<int, Produit>
-     */
-    #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'pays')]
-    private Collection $produits;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->produits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,30 +87,6 @@ class Pays
                 $user->setPays(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Produit>
-     */
-    public function getProduits(): Collection
-    {
-        return $this->produits;
-    }
-
-    public function addProduit(Produit $produit): static
-    {
-        if (!$this->produits->contains($produit)) {
-            $this->produits->add($produit);
-        }
-
-        return $this;
-    }
-
-    public function removeProduit(Produit $produit): static
-    {
-        $this->produits->removeElement($produit);
 
         return $this;
     }

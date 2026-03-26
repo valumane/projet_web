@@ -19,7 +19,6 @@
                 <th>Libellé</th>
                 <th>Prix unitaire</th>
                 <th>Stock</th>
-                <th>Pays</th>
                 <th>Dans le panier</th>
                 <th>Action</th>
             </tr>
@@ -33,19 +32,13 @@
                     <td>{{ produit.libelle }}</td>
                     <td>{{ produit.prixUnitaire }} €</td>
                     <td>{{ produit.quantiteStock }}</td>
-                    <td>
-                        {% for pays in produit.pays %}
-                            {{ pays.nom }}{% if not loop.last %}, {% endif %}
-                        {% else %}
-                            aucun
-                        {% endfor %}
-                    </td>
                     <td>{{ quantitePanier }}</td>
                     <td>
                         {% if currentUser %}
                             {% if quantitePanier > 0 or produit.quantiteStock > 0 %}
                                 <form method="post" action="{{ path('produit_panier_update', {id: produit.id}) }}">
                                     <select name="quantite">
+                                        <option value="0" selected>0</option>
                                         {% for i in range(-quantitePanier, produit.quantiteStock) %}
                                             {% if i != 0 %}
                                                 <option value="{{ i }}">
@@ -66,7 +59,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="6">Aucun produit disponible.</td>
+                    <td colspan="5">Aucun produit disponible.</td>
                 </tr>
             {% endfor %}
             </tbody>

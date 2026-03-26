@@ -64,7 +64,7 @@ final class UtilisateurController extends AbstractController
 
         // si le form est valide on met a jour les données
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPassword = $user->getPlainPassword();
 
             // hash le mdp seulement si un nv mdp a été saisi
             if (!empty($plainPassword)) {
@@ -166,7 +166,7 @@ final class UtilisateurController extends AbstractController
 
         // si le form est valide on cree le nv admin
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPassword = $admin->getPlainPassword();
 
             $admin->setPassword($passwordHasher->hashPassword($admin, $plainPassword));
             $admin->setIsAdmin(true);

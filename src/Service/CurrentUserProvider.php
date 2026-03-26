@@ -3,24 +3,25 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class CurrentUserProvider
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private readonly int $currentUserId
+        private Security $security
     ) {
-    }
-
-    public function getCurrentUserId(): int
-    {
-        return $this->currentUserId;
     }
 
     public function getCurrentUser(): ?User
     {
-        return $this->userRepository->find($this->currentUserId);
+        $user = $this->security->getUser();
+
+        return $user instanceof User ? $user : null;
+    }
+
+    public function getCurrentUserId(): ?int
+    {
+        return $this->getCurrentUser()?->getId();
     }
 
     public function hasCurrentUser(): bool

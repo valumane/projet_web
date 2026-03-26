@@ -16,6 +16,15 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout
+                target: accueil_index # ajout perso
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -26,8 +35,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/register$, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/ajout$, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/utilisateurs, allow_if: "is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN')" }
+        - { path: ^/produit/ajout$, allow_if: "is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN')" }
+        - { path: ^/produits/panier, allow_if: "is_granted('ROLE_USER') and not is_granted('ROLE_SUPER_ADMIN')" }
+        - { path: ^/panier, allow_if: "is_granted('ROLE_USER') and not is_granted('ROLE_SUPER_ADMIN')" }
+        - { path: ^/profil$, roles: ROLE_USER }
 
 when@test:
     security:

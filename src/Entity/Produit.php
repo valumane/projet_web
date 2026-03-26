@@ -32,19 +32,9 @@ class Produit
     #[ORM\OneToMany(targetEntity: ContenuPanier::class, mappedBy: 'produit')]
     private Collection $contenuPaniers;
 
-    /**
-     * @var Collection<int, Pays>
-     */
-    #[ORM\ManyToMany(targetEntity: Pays::class, inversedBy: 'produits')]
-    #[ORM\JoinTable(name: 'proj_produit_pays')]
-    #[ORM\JoinColumn(name: 'id_produit', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'id_pays', referencedColumnName: 'id')]
-    private Collection $pays;
-
     public function __construct()
     {
         $this->contenuPaniers = new ArrayCollection();
-        $this->pays = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,33 +102,6 @@ class Produit
             if ($contenuPanier->getProduit() === $this) {
                 $contenuPanier->setProduit(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Pays>
-     */
-    public function getPays(): Collection
-    {
-        return $this->pays;
-    }
-
-    public function addPays(Pays $pays): static
-    {
-        if (!$this->pays->contains($pays)) {
-            $this->pays->add($pays);
-            $pays->addProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removePays(Pays $pays): static
-    {
-        if ($this->pays->removeElement($pays)) {
-            $pays->removeProduit($this);
         }
 
         return $this;
