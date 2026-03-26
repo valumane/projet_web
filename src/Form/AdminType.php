@@ -30,7 +30,6 @@ class AdminType extends AbstractType
                 'placeholder' => 'Choisir un pays',
             ])
             ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
                 'required' => true,
                 'label' => 'Mot de passe',
             ])

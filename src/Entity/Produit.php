@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\Table(name: 'proj_produit')]
@@ -18,12 +19,17 @@ class Produit
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le libellé est obligatoire.')]
     private ?string $libelle = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Assert\NotBlank(message: 'Le prix unitaire est obligatoire.')]
+    #[Assert\Positive(message: 'Le prix unitaire doit être strictement positif.')]
     private ?string $prixUnitaire = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'La quantité en stock est obligatoire.')]
+    #[Assert\Positive(message: 'La quantité en stock doit être strictement positive.')]
     private ?int $quantiteStock = null;
 
     /**

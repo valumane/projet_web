@@ -30,7 +30,6 @@ class ProfilType extends AbstractType
                 'placeholder' => 'Choisir un pays',
             ])
             ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
                 'required' => false,
                 'empty_data' => '',
                 'label' => 'Nouveau mot de passe',
