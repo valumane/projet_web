@@ -22,7 +22,7 @@ security:
                 enable_csrf: true
             logout:
                 path: app_logout
-                target: accueil_index
+                target: accueil_index # ajout perso
                 # where to redirect after logout
                 # target: app_any_route
 
