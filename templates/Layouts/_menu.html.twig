@@ -9,7 +9,7 @@
         {% if currentUser is null %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
             <li><a href="{{ path('app_login') }}">Connexion</a></li>
-            <li>Création de compte indisponible</li>
+            <li><a href="{{ path('app_register') }}">Création de compte</a></li>
 
         {% elseif currentUser.isSuperAdmin %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
