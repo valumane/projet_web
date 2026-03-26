@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : utilisateurs{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/utilisateur.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : gestion des utilisateurs{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-utilisateur-list">
         <h2>Liste des utilisateurs</h2>
 
         <table>
@@ -22,9 +27,42 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td colspan="8">Aucun utilisateur affiché pour le moment.</td>
-            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.dateNaissance ? user.dateNaissance|date('Y-m-d') : '' }}</td>
+                    <td>
+                        {% if user.isSuperAdmin %}
+                            super-admin
+                        {% elseif user.isAdmin %}
+                            admin
+                        {% else %}
+                            client
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.pays %}
+                            {{ user.pays.nom }}
+                        {% else %}
+                            aucun
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.isSuperAdmin or user.id == currentUser.id %}
+                            suppression interdite
+                        {% else %}
+                            <a href="{{ path('utilisateur_delete', {id: user.id}) }}">Supprimer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun utilisateur affiché.</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </section>

@@ -1,5 +1,21 @@
 {# entête du site #}
 
-<div class="bandeau">
-    <p>Projet Symfony - Site de vente</p>
+<div class="bandeau-superieur">
+    <p class="bandeau-gauche">Bienvenue sur le site de vente</p>
+    <p class="bandeau-droite">
+        Connecté :
+        {% if currentUser %}
+            {{ currentUser.prenom }} {{ currentUser.nom }}
+            -
+            {% if currentUser.isSuperAdmin %}
+                super-admin
+            {% elseif currentUser.isAdmin %}
+                admin
+            {% else %}
+                client
+            {% endif %}
+        {% else %}
+            visiteur
+        {% endif %}
+    </p>
 </div>

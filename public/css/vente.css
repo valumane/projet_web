@@ -1,0 +1,42 @@
+#header,
+#menu,
+#titre,
+#vue,
+#footer,
+#flash {
+    padding: 15px;
+    background-color: white;
+    margin: 10px;
+    border: 1px solid #cccccc;
+}
+
+#menu nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu nav li {
+    display: inline-block;
+    margin-right: 12px;
+}
+
+.bandeau-superieur {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bandeau-gauche,
+.bandeau-droite {
+    margin: 0;
+}
+
+.footer-bandeau {
+    text-align: center;
+}
+
+.footer-bandeau img {
+    display: block;
+    margin: 0 auto;
+}

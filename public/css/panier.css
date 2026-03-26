@@ -1,0 +1,26 @@
+.page-panier table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.page-panier table,
+.page-panier th,
+.page-panier td {
+    border: 1px solid #999999;
+}
+
+.page-panier th,
+.page-panier td {
+    padding: 8px;
+    text-align: left;
+}
+
+.page-panier .panier-total {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.page-panier .panier-actions {
+    margin-top: 15px;
+}

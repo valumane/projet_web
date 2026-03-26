@@ -1,0 +1,24 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : ajout produit{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/produit.css') }}">
+{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : ajout produit{% endblock %}
+
+{% block vue %}
+    <section class="page-produit-add">
+        <h2>Ajouter un produit</h2>
+
+        {{ form_start(produitForm) }}
+            {{ form_row(produitForm.libelle) }}
+            {{ form_row(produitForm.prixUnitaire) }}
+            {{ form_row(produitForm.quantiteStock) }}
+
+            <button type="submit">Ajouter</button>
+        {{ form_end(produitForm) }}
+    </section>
+{% endblock %}

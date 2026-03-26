@@ -1,0 +1,30 @@
+.page-produit-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.page-produit-list table,
+.page-produit-list th,
+.page-produit-list td {
+    border: 1px solid #999999;
+}
+
+.page-produit-list th,
+.page-produit-list td {
+    padding: 8px;
+    text-align: left;
+}
+
+.page-produit-list form {
+    margin: 0;
+}
+
+.page-produit-add form {
+    margin-top: 15px;
+}
+
+.page-produit-add button,
+.page-produit-list button {
+    margin-top: 8px;
+}

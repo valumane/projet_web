@@ -2,7 +2,34 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block titre_page %}Accueil{% endblock %}
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
 
-{% block contenu %}
+{% block titre_principal %}Accueil{% endblock %}
+
+{% block vue %}
+    <section class="page-accueil">
+        <h2>Bienvenue sur le site</h2>
+
+        {% if currentUser %}
+            <div class="accueil-carte">
+                <p><strong>Utilisateur courant :</strong> {{ currentUser.login }}</p>
+                <p><strong>Nom :</strong> {{ currentUser.nom }}</p>
+                <p><strong>Prenom :</strong> {{ currentUser.prenom }}</p>
+                <p><strong>Admin :</strong> {{ currentUser.isAdmin ? 'oui' : 'non' }}</p>
+                <p><strong>Super-admin :</strong> {{ currentUser.isSuperAdmin ? 'oui' : 'non' }}</p>
+                <p><strong>Pays :</strong>
+                    {% if currentUser.pays %}
+                        {{ currentUser.pays.nom }}
+                    {% else %}
+                        aucun
+                    {% endif %}
+                </p>
+            </div>
+        {% else %}
+            <p>Aucun utilisateur courant.</p>
+        {% endif %}
+    </section>
 {% endblock %}

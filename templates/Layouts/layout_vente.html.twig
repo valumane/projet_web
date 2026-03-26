@@ -4,20 +4,16 @@
 
 {% block css %}
     {{ parent() }}
-    <link rel="stylesheet" media="screen" type="text/css" title="default" href="{{ asset('css/default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/vente.css') }}">
 {% endblock %}
 
 {% block body %}
-    <div id="flash">
-        {% include 'Layouts/_flash.html.twig' %}
+    <div id="header">
+        {{ render(controller('App\\Controller\\AccueilController::headerAction')) }}
     </div>
 
     <div id="menu">
         {{ render(controller('App\\Controller\\AccueilController::menuAction')) }}
-    </div>
-
-    <div id="header">
-        {% include 'Layouts/_header.html.twig' %}
     </div>
 
     <div id="titre">
@@ -26,6 +22,10 @@
 
     <div id="vue">
         {% block vue %}{% endblock %}
+    </div>
+
+    <div id="flash">
+        {% include 'Layouts/_flash.html.twig' %}
     </div>
 
     <div id="footer">

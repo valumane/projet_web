@@ -1,0 +1,27 @@
+{% extends 'Layouts/layout_vente.html.twig' %}
+
+{% block title %}{{ parent() }} : ajout administrateur{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/utilisateur.css') }}">
+{% endblock %}
+
+{% block titre_principal %}{{ parent() }} : ajout administrateur{% endblock %}
+
+{% block vue %}
+    <section class="page-utilisateur-admin-add">
+        <h2>Ajouter un administrateur</h2>
+
+        {{ form_start(adminForm) }}
+            {{ form_row(adminForm.login) }}
+            {{ form_row(adminForm.nom) }}
+            {{ form_row(adminForm.prenom) }}
+            {{ form_row(adminForm.dateNaissance) }}
+            {{ form_row(adminForm.pays) }}
+            {{ form_row(adminForm.plainPassword) }}
+
+            <button type="submit">Ajouter</button>
+        {{ form_end(adminForm) }}
+    </section>
+{% endblock %}

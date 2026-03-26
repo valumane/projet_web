@@ -2,10 +2,15 @@
 
 {% block title %}{{ parent() }} : produits{% endblock %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/produit.css') }}">
+{% endblock %}
+
 {% block titre_principal %}{{ parent() }} : liste des produits{% endblock %}
 
 {% block vue %}
-    <section>
+    <section class="page-produit-list">
         <h2>Produits disponibles</h2>
 
         <table>
@@ -14,13 +19,56 @@
                 <th>Libellé</th>
                 <th>Prix unitaire</th>
                 <th>Stock</th>
+                <th>Pays</th>
+                <th>Dans le panier</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td colspan="4">Aucun produit affiché pour le moment.</td>
-            </tr>
+            {% for produit in produits %}
+                {% set lignePanier = contenusPanier[produit.id] ?? null %}
+                {% set quantitePanier = lignePanier ? lignePanier.quantite : 0 %}
+
+                <tr>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.prixUnitaire }} €</td>
+                    <td>{{ produit.quantiteStock }}</td>
+                    <td>
+                        {% for pays in produit.pays %}
+                            {{ pays.nom }}{% if not loop.last %}, {% endif %}
+                        {% else %}
+                            aucun
+                        {% endfor %}
+                    </td>
+                    <td>{{ quantitePanier }}</td>
+                    <td>
+                        {% if currentUser %}
+                            {% if quantitePanier > 0 or produit.quantiteStock > 0 %}
+                                <form method="post" action="{{ path('produit_panier_update', {id: produit.id}) }}">
+                                    <select name="quantite">
+                                        {% for i in range(-quantitePanier, produit.quantiteStock) %}
+                                            {% if i != 0 %}
+                                                <option value="{{ i }}">
+                                                    {% if i > 0 %}+{{ i }}{% else %}{{ i }}{% endif %}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit">Modifier</button>
+                                </form>
+                            {% else %}
+                                aucune action
+                            {% endif %}
+                        {% else %}
+                            utilisateur absent
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun produit disponible.</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </section>
