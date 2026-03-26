@@ -8,14 +8,14 @@
     <ul>
         {% if currentUser is null %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
-            <li><a href="#">Connexion</a></li>
-            <li><a href="#">Création de compte</a></li>
+            <li><a href="{{ path('app_login') }}">Connexion</a></li>
+            <li>Création de compte indisponible</li>
 
         {% elseif currentUser.isSuperAdmin %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
             <li><a href="{{ path('profil_index') }}">Profil</a></li>
             <li><a href="{{ path('admin_add') }}">Ajouter un administrateur</a></li>
-            <li><a href="#">Déconnexion</a></li>
+            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
 
         {% elseif currentUser.isAdmin %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
@@ -25,14 +25,14 @@
             <li><a href="{{ path('utilisateur_list') }}">Utilisateurs</a></li>
             <li><a href="{{ path('produit_add') }}">Ajouter un produit</a></li>
             <li><a href="https://fr.wikipedia.org/wiki/Mass_Effect" target="_blank" rel="noopener">Lien externe</a></li>
-            <li><a href="#">Déconnexion</a></li>
+            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
 
         {% else %}
             <li><a href="{{ path('accueil_index') }}">Accueil</a></li>
             <li><a href="{{ path('profil_index') }}">Profil</a></li>
             <li><a href="{{ path('produit_list') }}">Produits</a></li>
             <li><a href="{{ path('panier_index') }}">Panier</a></li>
-            <li><a href="#">Déconnexion</a></li>
+            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
         {% endif %}
     </ul>
 </nav>
