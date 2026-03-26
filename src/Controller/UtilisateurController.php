@@ -52,21 +52,20 @@ final class UtilisateurController extends AbstractController
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher
     ): Response {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $user = $currentUserProvider->getCurrentUser();
 
-        // refuse si aucun user courant
         if ($user === null) {
-            throw $this->createNotFoundException('Aucun utilisateur courant.');
+            throw new \LogicException('Utilisateur authentifié introuvable.');
         }
 
         $form = $this->createForm(ProfilType::class, $user);
         $form->handleRequest($request);
 
-        // si le form est valide on met a jour les données
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // hash le mdp seulement si un nv mdp a été saisi
             if (!empty($plainPassword)) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);

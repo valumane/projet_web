@@ -158,25 +158,14 @@ final class ProduitController extends AbstractController
     ): Response {
         $currentUser = $currentUserProvider->getCurrentUser();
 
-
-        // refuse si super admin
-        if ($currentUser !== null && $currentUser->isSuperAdmin()) {
-            $this->addFlash('info', 'Accès refusé.');
-            return $this->redirectToRoute('accueil_index');
-        }
-
-
-        // refuse si pas admin simple
         if ($currentUser === null || !$currentUser->isAdmin() || $currentUser->isSuperAdmin()) {
-            $this->addFlash('info', 'Accès refusé.');
-            return $this->redirectToRoute('accueil_index');
+            throw $this->createAccessDeniedException('Accès refusé.');
         }
 
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
-        // si le form est valide on ajoute le produit en bdd
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($produit);
             $entityManager->flush();
